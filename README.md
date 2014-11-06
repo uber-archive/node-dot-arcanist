@@ -1,4 +1,4 @@
-node-dot-arcanist
+uber-dot-arcanist
 =================
 
 This product encapsulates any arcanist plugins we depend on at Uber. With it,
