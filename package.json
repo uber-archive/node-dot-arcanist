@@ -1,0 +1,28 @@
+{
+  "name": "uber-dot-arcanist",
+  "version": "1.0.2",
+  "description": "Uber's .arcanist folder as an npm module",
+  "main": "dot-arcanist.js",
+  "scripts": {
+    "lint": "lint-trap",
+    "test": "npm run lint && node test.js",
+    "cover": "istanbul cover --report cobertura --report html --print detail tape -- test.js",
+    "view-cover": "istanbul report html && open ./coverage/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:uber/node-dot-arcanist.git"
+  },
+  "keywords": [
+    "arcanist",
+    "phabricator"
+  ],
+  "author": "Andrew de Andrade <aandrade@uber.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "^0.3.2",
+    "lint-trap": "^0.2.1",
+    "tape": "^3.0.2"
+  },
+  "dependencies": {}
+}
