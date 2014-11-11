@@ -29,29 +29,15 @@ final class LintTrapLinter extends ArcanistExternalLinter {
   }
 
   protected function getDefaultMessageSeverity($code) {
-    if (preg_match('/^W/', $code)) {
+    if (preg_match('/^warning/', $code)) {
       return ArcanistLintSeverity::SEVERITY_WARNING;
-    } else if (preg_match('/^E043$/', $code)) {
-      // TODO: If JSHint encounters a large number of errors, it will quit
-      // prematurely and add an additional "Too Many Errors" error. Ideally, we
-      // should be able to pass some sort of `--force` option to `jshint`.
-      //
-      // See https://github.com/jshint/jshint/issues/180
-      return ArcanistLintSeverity::SEVERITY_DISABLED;
     } else {
       return ArcanistLintSeverity::SEVERITY_ERROR;
     }
   }
 
   public function getDefaultBinary() {
-    $prefix = $this->getDeprecatedConfiguration('lint.lint-trap.prefix');
-    $bin = $this->getDeprecatedConfiguration('lint.lint-trap.bin', 'lint-trap');
-
-    if ($prefix) {
-      return $prefix.'/'.$bin;
-    } else {
-      return $bin;
-    }
+    return getcwd().'/node_modules/.bin/lint-trap';
   }
 
   public function getVersion() {
@@ -80,23 +66,8 @@ final class LintTrapLinter extends ArcanistExternalLinter {
     return true;
   }
 
-  public function getReadDataFromStdinFilename() {
-    return '-';
-  }
-
   protected function getMandatoryFlags() {
-    $options = array();
-
-    $options[] = '--reporter='.dirname(realpath(__FILE__)).'/reporter.js';
-
-    if ($this->jshintrc) {
-      $options[] = '--config='.$this->jshintrc;
-    }
-
-    if ($this->jshintignore) {
-      $options[] = '--exclude-path='.$this->jshintignore;
-    }
-
+    $options = array(getcwd(), '--reporter=json');
     return $options;
   }
 
@@ -130,22 +101,15 @@ final class LintTrapLinter extends ArcanistExternalLinter {
   }
 
   protected function getDefaultFlags() {
-    $options = $this->getDeprecatedConfiguration(
-      'lint.lint-trap.options',
-      array());
-
-    $config = $this->getDeprecatedConfiguration('lint.lint-trap.config');
-    if ($config) {
-      $options[] = '--config='.$config;
-    }
-
+    $options = array();
     return $options;
   }
 
   protected function parseLinterOutput($path, $err, $stdout, $stderr) {
-    $errors = json_decode($stdout, true);
+    $json = json_decode($stdout, true);
+    $files = idx($json, 'files');
 
-    if (!is_array($errors)) {
+    if (!is_array($files)) {
       // Something went wrong and we can't decode the output. Exit abnormally.
       throw new ArcanistUsageException(
         "lint-trap returned unparseable output.\n".
@@ -154,34 +118,23 @@ final class LintTrapLinter extends ArcanistExternalLinter {
     }
 
     $messages = array();
-    foreach ($errors as $err) {
-      $message = new ArcanistLintMessage();
-      $message->setPath($path);
-      $message->setLine(idx($err, 'line'));
-      $message->setChar(idx($err, 'col'));
-      $message->setCode(idx($err, 'code'));
-      $message->setName('lint-trap'.idx($err, 'code'));
-      $message->setDescription(idx($err, 'reason'));
-      $message->setSeverity($this->getLintMessageSeverity(idx($err, 'code')));
+    foreach ($files as $f) {
+      $errors = idx($f, 'errors');
+      foreach ($errors as $err) {
+        $message = new ArcanistLintMessage();
+        $message->setPath(idx($f, 'file'));
+        $message->setLine(idx($err, 'line'));
+        $message->setChar(idx($err, 'column'));
+        $message->setCode(idx($err, 'rule'));
+        $message->setName(idx($err, 'linter').'.'.idx($err, 'rule'));
+        $message->setDescription(idx($err, 'message'));
+        $message->setSeverity($this->getLintMessageSeverity(idx($err, 'type')));
 
-      $messages[] = $message;
+        $messages[] = $message;
+      }
     }
 
     return $messages;
-  }
-
-  protected function getLintCodeFromLinterConfigurationKey($code) {
-    if (!preg_match('/^(E|W)\d+$/', $code)) {
-      throw new Exception(
-        pht(
-          'Unrecognized lint message code "%s". Expected a valid lint-trap '.
-          'lint code like "%s" or "%s".',
-          $code,
-          'E033',
-          'W093'));
-    }
-
-    return $code;
   }
 
 }
