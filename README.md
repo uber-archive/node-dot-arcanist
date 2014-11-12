@@ -11,6 +11,7 @@ Included Arcanist Plugins
 Currently, this module contains only two arcanist plugins:
 * tap
 * [jenkinsphoo][jenkinsphoo]
+* [lint-trap][lint-trap]
 
 Usage
 -----
@@ -59,15 +60,30 @@ new value should be:
 {
     "load": [
         "node_modules/uber-dot-arcanist/.arcanist/tap",
-        "node_modules/uber-dot-arcanist/.arcanist/jenkinsphoo"
+        "node_modules/uber-dot-arcanist/.arcanist/jenkinsphoo",
+        "node_modules/uber-dot-arcanist/.arcanist/lint-trap"
     ]
 }
 ```
 
-Once you've made this change just stage your changes and commit:
+To add support for lint-trap when submitting differentials to Phabricator with
+`arc diff`, you can add the following to your `.arclint` file.
+
+```json
+{
+    "linters": {
+        "lint-trap": {
+            "type": "lint-trap"
+        }
+    }
+}
+```
+
+Once you've made these changes just stage your changes and commit:
 
 ```bash
 git add package.json
+git add .arclint
 git rm .arcanist
 git add .arcconfig
 git commit -m "Loading arcanist plugins from uber-dot-arcanist npm module"
@@ -120,3 +136,4 @@ THE SOFTWARE.
 
 
 [jenkinsphoo]: https://github.com/disqus/disqus-arcanist/blob/master/src/event/JenkinsDiffEventListener.php
+[lint-trap]: https://github.com/uber/lint-trap
