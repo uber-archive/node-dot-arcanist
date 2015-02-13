@@ -21,7 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "istanbul": "^0.3.2",
-    "lint-trap": "^0.2.1",
+    "lint-trap": "^1.0.0",
     "tape": "^3.0.2"
   },
   "dependencies": {}
