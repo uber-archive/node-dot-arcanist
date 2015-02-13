@@ -85,7 +85,7 @@ final class LintTrapLinter extends ArcanistExternalLinter {
         'help' => pht('Custom .lintrc configuration file.'),
       ),
       'lint-trap.line-length' => array(
-        'type' => 'optional string',
+        'type' => 'optional int',
         'help' => pht('Custom maximum line-length'),
       ),
     );
