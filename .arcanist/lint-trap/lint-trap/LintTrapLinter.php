@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Uses JSHint to detect errors and potential problems in JavaScript code.
+ * Uses lint-trap to detect errors and potential problems in JavaScript code.
  */
 final class LintTrapLinter extends ArcanistExternalLinter {
 
@@ -68,6 +68,9 @@ final class LintTrapLinter extends ArcanistExternalLinter {
 
   protected function getMandatoryFlags() {
     $options = array(getcwd(), '--reporter=json');
+    if ($this->lineLength) {
+      $options[] = '--line-length=' . $this->lineLength;
+    }
     return $options;
   }
 
@@ -80,6 +83,10 @@ final class LintTrapLinter extends ArcanistExternalLinter {
       'lint-trap.lintrc' => array(
         'type' => 'optional string',
         'help' => pht('Custom .lintrc configuration file.'),
+      ),
+      'lint-trap.line-length' => array(
+        'type' => 'optional string',
+        'help' => pht('Custom maximum line-length'),
       ),
     );
 
@@ -94,6 +101,10 @@ final class LintTrapLinter extends ArcanistExternalLinter {
 
       case 'lint-trap.lintrc':
         $this->lintrc = $value;
+        return;
+
+      case 'lint-trap.line-length':
+        $this->lineLength = $value;
         return;
     }
 
