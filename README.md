@@ -67,13 +67,15 @@ new value should be:
 ```
 
 To add support for lint-trap when submitting differentials to Phabricator with
-`arc diff`, you can add the following to your `.arclint` file.
+`arc diff`, and to pass a custom line length limit, you can add the following to
+your `.arclint` file:
 
 ```json
 {
     "linters": {
         "lint-trap": {
-            "type": "lint-trap"
+            "type": "lint-trap",
+            "lint-trap.line-length": 100
         }
     }
 }
