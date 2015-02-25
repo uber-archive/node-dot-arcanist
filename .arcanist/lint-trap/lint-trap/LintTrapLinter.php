@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Uses JSHint to detect errors and potential problems in JavaScript code.
+ * Uses LintTrap to detect errors and potential problems in JavaScript code.
  */
 final class LintTrapLinter extends ArcanistExternalLinter {
 
@@ -81,6 +81,12 @@ final class LintTrapLinter extends ArcanistExternalLinter {
         'type' => 'optional string',
         'help' => pht('Custom .lintrc configuration file.'),
       ),
+      'text.max-line-length' => array(
+        'type' => 'optional int',
+        'help' => pht(
+          'Adjust the maximum line length before a warning is raised. By '.
+          'default, a warning is raised on lines exceeding 80 characters.'),
+      ),
     );
 
     return $options + parent::getLinterConfigurationOptions();
@@ -95,6 +101,10 @@ final class LintTrapLinter extends ArcanistExternalLinter {
       case 'lint-trap.lintrc':
         $this->lintrc = $value;
         return;
+
+      case 'text.max-line-length':
+      $this->setMaxLineLength($value);
+        return;
     }
 
     return parent::setLinterConfigurationValue($key, $value);
@@ -102,6 +112,11 @@ final class LintTrapLinter extends ArcanistExternalLinter {
 
   protected function getDefaultFlags() {
     $options = array();
+
+    if ($this->maxLineLength) {
+      $options[] = '--line-length='.$this->maxLineLength;
+    }
+
     return $options;
   }
 
