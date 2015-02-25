@@ -92,6 +92,11 @@ final class LintTrapLinter extends ArcanistExternalLinter {
     return $options + parent::getLinterConfigurationOptions();
   }
 
+  public function setMaxLineLength($new_length) {
+    $this->maxLineLength = $new_length;
+    return $this;
+  }
+
   public function setLinterConfigurationValue($key, $value) {
     switch ($key) {
       case 'lint-trap.lintignore':
