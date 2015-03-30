@@ -10,8 +10,6 @@
  */
 final class TAPTestEngine extends ArcanistUnitTestEngine {
 
-  private $timeout = 15;
-
   public function run() {
     $results = array();
     $build_start = microtime(true);
@@ -25,9 +23,16 @@ final class TAPTestEngine extends ArcanistUnitTestEngine {
             ->getConfigFromAnySource('unit.engine.tap.command');
     }
 
+    $timeout = $config_manager
+        ->getConfigFromAnySource('unit.engine.tap.timeout');
+    
+    if (!$timeout) {
+        $timeout = 15;
+    }
+
     $future = new ExecFuture('%C', $command);
 
-    $future->setTimeout($this->timeout);
+    $future->setTimeout($timeout);
     $result = new ArcanistUnitTestResult();
     $result->setName($command);
 
@@ -45,7 +50,7 @@ final class TAPTestEngine extends ArcanistUnitTestEngine {
           print(
             "Process stdout:\n" . $exc->getStdout() .
             "\nProcess stderr:\n" . $exc->getStderr() .
-            "\nExceeded timeout of $this->timeout secs.\nMake unit tests faster."
+            "\nExceeded timeout of $timeout secs.\nMake unit tests faster."
           );
         } else {
           $result->setUserdata($exc->getStdout() . $exc->getStderr());
@@ -143,3 +148,4 @@ function unit_test_engine_sort_lines($a, $b) {
 
     return ($a_number < $b_number) ? -1 : 1;
 }
+
