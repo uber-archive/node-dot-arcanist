@@ -8,7 +8,7 @@ your project.
 Included Arcanist Plugins
 -------------------------
 
-Currently, this module contains only two arcanist plugins:
+Currently, this module contains four arcanist plugins:
 * tap
 * [jenkinsphoo][jenkinsphoo] (deprecated)
 * [lint-trap][lint-trap] (deprecated)
