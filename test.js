@@ -20,9 +20,13 @@ function assertMessage(name) {
 test('dummy test', function t(assert) {
     assert.plan(3);
 
-    ['tap', 'jenkinsphoo'].forEach(function assertPluginExists(name) {
+    var plugins = ['tap', 'jenkinsphoo', 'lint-trap', 'uber-standard'];
+
+    plugins.forEach(assertPluginExists);
+
+    function assertPluginExists(name) {
         assert.ok(hasPlugin(name), assertMessage(name));
-    });
+    }
 
     var throwsMessage = 'Calling uber-dot-arcanist programmatically throws';
     assert.throws(dotArcanist, throwsMessage);
