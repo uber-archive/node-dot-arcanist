@@ -137,4 +137,4 @@ THE SOFTWARE.
 
 [jenkinsphoo]: https://github.com/disqus/disqus-arcanist/blob/master/src/event/JenkinsDiffEventListener.php
 [lint-trap]: https://github.com/uber/lint-trap
-[uber-standard]: https://github.com/uber/uber-standard
+[uber-standard]: https://github.com/uber/standard
