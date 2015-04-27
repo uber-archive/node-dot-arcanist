@@ -27,6 +27,10 @@ final class UberStandardLinter extends ArcanistExternalLinter {
     return 'uber-standard';
   }
 
+  protected function getDefaultMessageSeverity($code) {
+    return ArcanistLintSeverity::SEVERITY_ERROR;
+  }
+
   public function getDefaultBinary() {
     return getcwd().'/node_modules/.bin/uber-standard';
   }
@@ -58,7 +62,7 @@ final class UberStandardLinter extends ArcanistExternalLinter {
   }
 
   protected function getMandatoryFlags() {
-    $options = array(getcwd(), '--reporter json');
+    $options = array('--reporter=json');
     return $options;
   }
 
@@ -89,6 +93,7 @@ final class UberStandardLinter extends ArcanistExternalLinter {
   }
 
   protected function parseLinterOutput($path, $err, $stdout, $stderr) {
+    echo "$stdout";
     $json = json_decode($stdout, true);
     $files = idx($json, 'files');
 
@@ -110,7 +115,7 @@ final class UberStandardLinter extends ArcanistExternalLinter {
         $message->setChar(idx($err, 'column'));
         $message->setCode(idx($err, 'rule'));
         $message->setDescription(idx($err, 'message'));
-        $message->setSeverity($this->ArcanistLintSeverity::SEVERITY_ERROR);
+        $message->setSeverity($this->getLintMessageSeverity(idx($err, 'type')));
 
         $messages[] = $message;
       }
