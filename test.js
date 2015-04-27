@@ -18,7 +18,7 @@ function assertMessage(name) {
 }
 
 test('dummy test', function t(assert) {
-    assert.plan(3);
+    assert.plan(5);
 
     var plugins = ['tap', 'jenkinsphoo', 'lint-trap', 'uber-standard'];
 
