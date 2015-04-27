@@ -53,12 +53,8 @@ final class UberStandardLinter extends ArcanistExternalLinter {
     return true;
   }
 
-  public function supportsReadDataFromStdin() {
-    return true;
-  }
-
   protected function getMandatoryFlags() {
-    $options = array(getcwd(), '--reporter json');
+    $options = array('--reporter=json');
     return $options;
   }
 
