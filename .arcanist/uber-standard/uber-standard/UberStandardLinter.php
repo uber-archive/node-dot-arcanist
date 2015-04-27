@@ -93,7 +93,6 @@ final class UberStandardLinter extends ArcanistExternalLinter {
   }
 
   protected function parseLinterOutput($path, $err, $stdout, $stderr) {
-    echo "$stdout";
     $json = json_decode($stdout, true);
     $files = idx($json, 'files');
 
