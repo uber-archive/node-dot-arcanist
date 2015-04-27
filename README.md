@@ -8,10 +8,11 @@ your project.
 Included Arcanist Plugins
 -------------------------
 
-Currently, this module contains only two arcanist plugins:
+Currently, this module contains four arcanist plugins:
 * tap
-* [jenkinsphoo][jenkinsphoo]
-* [lint-trap][lint-trap]
+* [jenkinsphoo][jenkinsphoo] (deprecated)
+* [lint-trap][lint-trap] (deprecated)
+* [uber-standard][uber-standard]
 
 Usage
 -----
@@ -47,7 +48,7 @@ array like so:
 
 ```json
 {
-    "load": [".arcanist/tap", ".arcanist/jenkinsphoo", "arcanist/jshintlinter"]
+    "load": [".arcanist/tap", "arcanist/uber-standard"]
 }
 ```
 
@@ -60,8 +61,7 @@ new value should be:
 {
     "load": [
         "node_modules/uber-dot-arcanist/.arcanist/tap",
-        "node_modules/uber-dot-arcanist/.arcanist/jenkinsphoo",
-        "node_modules/uber-dot-arcanist/.arcanist/lint-trap"
+        "node_modules/uber-dot-arcanist/.arcanist/uber-standard"
     ]
 }
 ```
@@ -72,8 +72,8 @@ To add support for lint-trap when submitting differentials to Phabricator with
 ```json
 {
     "linters": {
-        "lint-trap": {
-            "type": "lint-trap"
+        "uber-standard": {
+            "type": "uber-standard"
         }
     }
 }
@@ -137,3 +137,4 @@ THE SOFTWARE.
 
 [jenkinsphoo]: https://github.com/disqus/disqus-arcanist/blob/master/src/event/JenkinsDiffEventListener.php
 [lint-trap]: https://github.com/uber/lint-trap
+[uber-standard]: https://github.com/uber/standard
