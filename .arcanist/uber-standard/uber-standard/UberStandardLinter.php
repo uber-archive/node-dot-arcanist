@@ -62,7 +62,7 @@ final class UberStandardLinter extends ArcanistExternalLinter {
   }
 
   protected function getMandatoryFlags() {
-    $options = array('--reporter=json');
+    $options = array('--reporter=json', '--stdin');
     return $options;
   }
 
