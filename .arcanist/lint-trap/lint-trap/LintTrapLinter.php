@@ -7,6 +7,7 @@ final class LintTrapLinter extends ArcanistExternalLinter {
 
   private $lintignore;
   private $lintrc;
+  private $maxLineLength;
 
   public function getInfoName() {
     return 'LintTrap';
