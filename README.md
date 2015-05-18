@@ -1,18 +1,18 @@
 uber-dot-arcanist
 =================
 
-This product encapsulates any arcanist plugins we depend on at Uber. With it,
-you can avoid copypasta plugin folders in the .arcanist folder at the root of
-your project.
+This product encapsulates any arcanist plugins we depend on at Uber that are not
+included with arcanist itself. With this repo, you can avoid copypasta plugin 
+folders in the .arcanist folder at the root of your project that are likely to
+be out of date.
 
 Included Arcanist Plugins
 -------------------------
 
-Currently, this module contains four arcanist plugins:
+Currently, this module contains three arcanist plugins:
 * tap
-* [jenkinsphoo][jenkinsphoo] (deprecated)
-* [lint-trap][lint-trap] (deprecated)
 * [uber-standard][uber-standard]
+* [lint-trap][lint-trap] (deprecated)
 
 Usage
 -----
@@ -20,31 +20,31 @@ Usage
 To use this module, follow these steps from the root of your project:
 
 ```bash
-# upgrade arcanist
+# first make sure you have the most recent version of arcanist
 arc upgrade
 
 # install uber-dot-arcanist as a dev-dependency
 npm install --save-dev uber-dot-arcanist
 
-# check the contents of .arcanist to verify that it does not contain any
-# plugins not included with either this module or with arcanist itself. Most
-# projects will only have tap, jenkinsphoo and jshintlinter. This module
-# contains the first two and the most recent version of arc that you just
-# upgraded to includes jshintlinter.
+# if you currently have a .arcanist/ folder in your project, check it to make
+# sure that is doesn't include any plugins that uber-dot-arcanist doesn't
+# include.
+# Legacy Uber projects may have tap, jenkinsphoo and jshintlinter. This module
+# contains only the tap plugin as usage of the other two are deprecated at Uber.
 ls -al .arcanist
 
 # if there are no folders or directories in .arcanist besides jenkinsphoo, tap
 # or jshintlinter, you can delete .arcanist. If there are any other modules,
 # follow the instructions in the section 'How to handle other plugins in
 # .arcanist'
-rm -rf .arcanist
+git rm -rf .arcanist
 ```
 
 After removing the .arcanist folder, you need to configure arcanist to load the
 plugins from the `node_modules/uber-dot-arcanist/.arcanist/` folder.
 
-Open your `.arcconfig` file and look for the `load` property. It should be an
-array like so:
+Open your `.arcconfig` file and look for the `load` property. It is likely to be
+an array like so:
 
 ```json
 {
@@ -52,10 +52,10 @@ array like so:
 }
 ```
 
-If you see `.arcanist/jshintlinter` in the array, you can delete that element.
-For `jenkinsphoo` and `tap`, you just need to prepend the path to the .arcanist
+If you see `jshintlinter` or `jenkinsphoo` in the array, you can delete those
+elements. For `tap`, you just need to prepend the path to the .arcanist
 folder in this module. Assuming your `load` value was the one right above, your
-new value should be:
+new values would be:
 
 ```json
 {
@@ -66,14 +66,15 @@ new value should be:
 }
 ```
 
-To add support for lint-trap when submitting differentials to Phabricator with
-`arc diff`, you can add the following to your `.arclint` file.
+To add support for uber-standard when submitting differentials to Phabricator
+with `arc diff`, you can add the following to your `.arclint` file.
 
 ```json
 {
     "linters": {
         "uber-standard": {
-            "type": "uber-standard"
+            "type": "uber-standard",
+            "include": "(\\.js$)"
         }
     }
 }
@@ -84,7 +85,6 @@ Once you've made these changes just stage your changes and commit:
 ```bash
 git add package.json
 git add .arclint
-git rm .arcanist
 git add .arcconfig
 git commit -m "Loading arcanist plugins from uber-dot-arcanist npm module"
 ```
@@ -92,8 +92,8 @@ git commit -m "Loading arcanist plugins from uber-dot-arcanist npm module"
 How to handle other plugins in .arcanist
 ----------------------------------------
 
-If you encounter a plugin in your .arcanist folder that is not `jenkinsphoo`,
-`tap` or `jshintlinter`, you should first check the [phacility/arcanist][arcrepo]
+If you encounter a plugin in your .arcanist folder that is not either `tap` or
+`uber-standard`, you should first check the [phacility/arcanist][arcrepo]
 to see if the plugin you are using is already part of the standard arcanist
 install. If it is not, git clone this repo and add the plugin to this repo to
 make it available to other engineers at Uber. Don't forget to add the repo to
@@ -108,9 +108,6 @@ plugins are included and that this module throws if called programmatically.
 
 License
 -------
-
-[`JenkinsDiffEventListener.php`][jenkinsphoo] is Apache 2 licensed from
-Disqus. Everything else is MIT licensed from Uber Technologies, Inc.
 
 The MIT License (MIT)
 
@@ -135,6 +132,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-[jenkinsphoo]: https://github.com/disqus/disqus-arcanist/blob/master/src/event/JenkinsDiffEventListener.php
 [lint-trap]: https://github.com/uber/lint-trap
 [uber-standard]: https://github.com/uber/standard

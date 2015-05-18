@@ -18,9 +18,9 @@ function assertMessage(name) {
 }
 
 test('dummy test', function t(assert) {
-    assert.plan(5);
+    assert.plan(4);
 
-    var plugins = ['tap', 'jenkinsphoo', 'lint-trap', 'uber-standard'];
+    var plugins = ['tap', 'lint-trap', 'uber-standard'];
 
     plugins.forEach(assertPluginExists);
 
