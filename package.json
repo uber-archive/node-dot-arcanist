@@ -1,6 +1,6 @@
 {
   "name": "uber-dot-arcanist",
-  "version": "1.4.3",
+  "version": "2.0.0",
   "description": "Uber's .arcanist folder as an npm module",
   "main": "dot-arcanist.js",
   "scripts": {
