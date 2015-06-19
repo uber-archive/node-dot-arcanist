@@ -1,3 +1,8 @@
+** DEPRECATED **
+================
+
+These plugins can now be found in [Uber's arcanist fork](https://github.com/uber/arcanist)
+
 uber-dot-arcanist
 =================
 
